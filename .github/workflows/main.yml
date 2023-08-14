@@ -20,7 +20,7 @@ jobs:
 
         include:
         
-          - os: 'ubuntu-lastest'
+          - os: 'ubuntu-latest'
             triplet: 'x64-linux'
             # To run `nuget.exe` on non-Windows platforms, we must use `mono`.
             mono: 'mono'
