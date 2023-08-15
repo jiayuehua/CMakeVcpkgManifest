@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for CMakeVcpkgManifest, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.26)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -14,9 +14,15 @@ project ("CMakeVcpkgManifest")
 # Add source to this project's executable.
 add_executable (CMakeVcpkgManifest "CMakeVcpkgManifest.cpp" "CMakeVcpkgManifest.h")
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET CMakeVcpkgManifest PROPERTY CXX_STANDARD 20)
-endif()
+set_property(TARGET CMakeVcpkgManifest PROPERTY CXX_STANDARD 20)
 
-find_package(fmt CONFIG REQUIRED)
+# tests target
+add_executable(tests)
+find_package(GTest CONFIG REQUIRED)
+target_sources(tests PRIVATE tests.cpp)
+target_link_libraries(tests PRIVATE GTest::gtest GTest::gtest_main)
+set_property(TARGET tests PROPERTY CXX_STANDARD 20)
+enable_testing()
+add_test(tests tests)
+
 # TODO: Add tests and install targets if needed.
