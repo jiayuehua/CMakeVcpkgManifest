@@ -4,14 +4,13 @@ name: Microsoft Code Analysis
 # events but only for the master branch
 on: [ pull_request, push, workflow_dispatch ]
 
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
-      CONFIG_DIR: '${{ github.workspace }}/builds/${{ matrix.cmake_preset }}'
+      CONFIG_DIR: '${{ github.workspace }}/builds/ninja-multi-vcpkg/'
     
     permissions:
       contents: read         # for actions/checkout to fetch code
@@ -19,17 +18,8 @@ jobs:
     
     strategy:
       matrix:
-        
-        vstriplet: ['linux-debug']
-                
+        os: [ windows-latest ]
 
-        include:
-        
-          - os: 'windows-latest'
-            triplet: 'x64-linux'
-            # To run `nuget.exe` on non-Windows platforms, we must use `mono`.
-            mono: 'mono'
-            vstriplet: 'linux-debug'
             
       
       
@@ -37,13 +27,13 @@ jobs:
     #runs-on: ubuntu-latest
     runs-on: ${{ matrix.os }}
 
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+   # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
             submodules: true
+            
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
@@ -61,6 +51,7 @@ jobs:
         with:
           vcpkgJsonGlob: 'vcpkg.json'
 
+
      # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
       - name: 'Setup NuGet Credentials'
         shell: 'bash'
@@ -75,14 +66,11 @@ jobs:
           -password "${{ secrets.GITHUB_TOKEN }}"
 
 
-
-      - name: Configure CMake
+      - name: 'Run CMake with Ninja'
         uses: lukka/run-cmake@v10
-        
-        
         with:
           configurePreset: 'ninja-multi-vcpkg'
-          buildPreset: 'ninja-vcpkg-debug'
+
           
       - name: Initialize MSVC Code Analysis
         uses: microsoft/msvc-code-analysis-action@04825f6d9e00f87422d6bf04e1a38b1f3ed60d99
@@ -105,3 +93,4 @@ jobs:
         with:
           name: sarif-file
           path: ${{ steps.run-analysis.outputs.sarif }}
+ 
