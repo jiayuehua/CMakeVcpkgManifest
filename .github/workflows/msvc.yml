@@ -11,7 +11,7 @@ jobs:
   build:
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
-      CONFIG_DIR: '${{ github.workspace }}/builds/${{ matrix.cmake_preset }}'
+      CONFIG_DIR: '${{ github.workspace }}/builds/ninja-multi-vcpkg/'
     
     permissions:
       contents: read         # for actions/checkout to fetch code
@@ -25,11 +25,11 @@ jobs:
 
         include:
         
-          - os: 'ubuntu-latest'
+          - os: 'windows-latest'
             triplet: 'x64-linux'
             # To run `nuget.exe` on non-Windows platforms, we must use `mono`.
-            mono: 'mono'
-            vstriplet: 'linux-debug'
+            mono: ''
+            vstriplet: 'debug'
             
       
       
@@ -103,4 +103,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sarif-file
-          path: ${{ steps.run-analy
+          path: ${{ steps.run-analysis.outputs.sarif }}
