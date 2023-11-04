@@ -3,7 +3,20 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on: [ pull_request, push, workflow_dispatch ]
+###############################################################################
+# Add this section to your workflow file does not already have it to enable
+# the job to write the dependency metadata.
+###############################################################################
+permissions:
+  contents: write
 
+###############################################################################
+# Add these environment variables to your workflow to enable the vcpkg
+# dependency graph integration.
+###############################################################################
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VCPKG_FEATURE_FLAGS: dependencygraph
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -11,11 +24,12 @@ jobs:
   build:
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
+      
 
     strategy:
       matrix:
-        
-        vstriplet: ['linux-debug']
+        os: [ ubuntu-latest, windows-latest]
+        cmake_preset: [ debug, release ]
                 
 
         include:
@@ -42,7 +56,7 @@ jobs:
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.vstriplet }}
+          key: ${{ matrix.os }}-${{ matrix.cmake_preset }}
           max-size: 1000M
 
       # Runs a single command using the runners shell
@@ -75,5 +89,5 @@ jobs:
         uses: lukka/run-cmake@v10
         with:
           configurePreset: 'ninja-multi-vcpkg'
-          buildPreset: 'ninja-vcpkg-debug'
-          testPreset: 'test-debug'
+          buildPreset: ninja-vcpkg-${{ matrix.cmake_preset }}
+          testPreset: test-${{ matrix.cmake_preset }}
