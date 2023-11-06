@@ -16,13 +16,18 @@ add_executable (CMakeVcpkgManifest "CMakeVcpkgManifest.cpp" "CMakeVcpkgManifest.
 
 set_property(TARGET CMakeVcpkgManifest PROPERTY CXX_STANDARD 20)
 
+enable_testing()
 # tests target
 add_executable(tests)
 find_package(GTest CONFIG REQUIRED)
 target_sources(tests PRIVATE tests.cpp)
 target_link_libraries(tests PRIVATE GTest::gtest GTest::gtest_main)
 set_property(TARGET tests PROPERTY CXX_STANDARD 20)
-enable_testing()
 add_test(tests tests)
+add_executable(my_test tests2.cpp)
+target_link_libraries(my_test PRIVATE GTest::gtest GTest::gtest_main)
+add_test(NAME my_test COMMAND my_test)
+set_tests_properties(tests PROPERTIES LABELS "unit")
+set_tests_properties(my_test PROPERTIES LABELS "unit")
 
 # TODO: Add tests and install targets if needed.

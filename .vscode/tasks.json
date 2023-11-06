@@ -6,7 +6,7 @@
 			"label": "CMake: build",
 			"command": "build",
 			"targets": [
-				"CMakeVcpkgManifest"
+				"CMakeVcpkgManifest","tests"
 			],
 			"preset": "ninja-vcpkg-debug",
 			"group": "build",
