@@ -20,25 +20,23 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
+
+
+        
   # This workflow contains a single job called "build"
   build:
     env:
-      VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
+      VCPKG_BINARY_SOURCES: 'clear'
       
 
     strategy:
       matrix:
-        os: [ ubuntu-22.04]
+        os: [ ubuntu-24.04]
         cmake_preset: [ debug ]
                 
 
-        include:
-        
-          - os: 'ubuntu-22.04'
-            triplet: 'x64-linux'
-            # To run `nuget.exe` on non-Windows platforms, we must use `mono`.
-            mono: 'mono'
-            vstriplet: 'linux-debug'
+
             
       
       
@@ -69,21 +67,6 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
-
-
-     # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
-      - name: 'Setup NuGet Credentials'
-        shell: 'bash'
-        # Replace <OWNER> with your organization name
-        run: >
-          ${{ matrix.mono }} `$VCPKG_ROOT/vcpkg fetch nuget | tail -n 1`
-          sources add
-          -source "https://nuget.pkg.github.com/jiayuehua/index.json"
-          -storepasswordincleartext
-          -name "GitHub"
-          -username "jiayeuhua"
-          -password "${{ secrets.GITHUB_TOKEN }}"
-
 
       - name: 'Run CMake with Ninja'
         uses: lukka/run-cmake@v10
