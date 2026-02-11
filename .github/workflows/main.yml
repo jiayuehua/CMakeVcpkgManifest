@@ -22,16 +22,12 @@ env:
 jobs:
   admin-tasks:
     runs-on: ubuntu-24.04
+    
     steps:
-        - name: Setup .NET
-      # Use the setup-dotnet action to ensure the specific version you need is available
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: '8.0.x' 
-        - name: Build and test
-          run: |
-            dotnet build
-            dotnet test
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
 
         
   # This workflow contains a single job called "build"
