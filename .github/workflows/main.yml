@@ -71,7 +71,7 @@ jobs:
           vcpkgJsonGlob: 'vcpkg.json'
 
       - name: Install Mono
-        run: sudo apt-get update && sudo apt-get install -y mono-complete
+        run: apt-get update && sudo apt-get install -y mono-complete
 
 
      # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
