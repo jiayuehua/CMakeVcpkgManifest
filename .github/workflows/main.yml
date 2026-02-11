@@ -55,10 +55,6 @@ jobs:
         with:
             submodules: true
 
-      - name: Setup Mono
-        uses: crazy-max/ghaction-setup-mono@v2
-        with:
-          mono-version: 'latest'
 
             
       - name: ccache
@@ -79,8 +75,7 @@ jobs:
           vcpkgJsonGlob: 'vcpkg.json'
       
 
-      - name: Install Mono
-        run: apt-get update && apt-get install -y mono-complete
+  
 
 
      # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
