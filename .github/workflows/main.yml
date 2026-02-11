@@ -54,6 +54,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
             submodules: true
+
+      - name: Setup Mono
+        uses: crazy-max/ghaction-setup-mono@v2
+        with:
+          mono-version: 'latest'
+
+            
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
@@ -70,6 +77,7 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: 'vcpkg.json'
+      
 
       - name: Install Mono
         run: apt-get update && apt-get install -y mono-complete
