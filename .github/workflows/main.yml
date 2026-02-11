@@ -23,16 +23,16 @@ jobs:
   admin-tasks:
     runs-on: ubuntu-24.04
     steps:
-      - name: update mono.
-        run: |
-          sudo apt-get update
-          sudo apt-get update
-          sudo apt install ca-certificates gnupg
-          sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-          sudo chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-          sudo apt update 
-          sudo apt-get install -y mono-complete
+        - name: Setup .NET
+      # Use the setup-dotnet action to ensure the specific version you need is available
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0.x' 
+        - name: Build and test
+          run: |
+            dotnet build
+            dotnet test
+
         
   # This workflow contains a single job called "build"
   build:
@@ -51,7 +51,7 @@ jobs:
           - os: 'ubuntu-24.04'
             triplet: 'x64-linux'
             # To run `nuget.exe` on non-Windows platforms, we must use `mono`.
-            mono: 'mono'
+            mono: 'dotnet'
             vstriplet: 'linux-debug'
             
       
