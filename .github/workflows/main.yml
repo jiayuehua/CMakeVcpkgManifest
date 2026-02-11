@@ -22,9 +22,6 @@ env:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    container:
-      image: ubuntu:latest
-      options: --user root
       
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
